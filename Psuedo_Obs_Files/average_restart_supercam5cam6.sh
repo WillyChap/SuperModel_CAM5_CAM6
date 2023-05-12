@@ -3,12 +3,12 @@
 
 module load nco 
 
-case1=cam6_FHIST
-case2=cam6cam5phys_FHIST_nlev32_2
+case1=CAM6_f09_g16
+case2=CAM5_32levs
 
-path1=/glade/scratch/francines/${case1}/run
-path2=/glade/scratch/francines/${case2}/run
-outpath=/glade/work/francines/pseudoobs
+path1=/glade/scratch/wchapman/${case1}/run
+path2=/glade/scratch/wchapman/${case2}/run
+outpath=/glade/work/wchapman/pseudoobs_V2
 
 cd ${path2}
 declare cam5_time
@@ -22,8 +22,8 @@ time=`echo "${cam6_time}" | grep -o -P '(?<=r.).*(?=.nc)'`
 echo "$time"
 
 cd ${outpath}
-file1=cam6_FHIST.cam.h1.${time}.nc
-file2=cam6cam5phys_FHIST_nlev32_2.cam.h1.${time}.nc
+file1=CAM6_f09_g16.cam.h1.${time}.nc
+file2=CAM5_32levs.cam.h1.${time}.nc
 outfile=test_pseudoobs_UVT.h1.${time}.nc
 
 
