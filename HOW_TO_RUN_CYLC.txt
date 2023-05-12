@@ -11,7 +11,7 @@ cylc play super_cam5cam6/run1
 #######
 #######
 #then you can go to the cylc directory to check logs... 
-In your home directory there will be: 
+In your home directory there will be a newly created file path: 
 ~/cylc-run/super_cam5cam6/run1  
 #######
 #######
@@ -19,6 +19,7 @@ In your home directory there will be:
 #######
 #######
 #if you need to stop previous run... and you do. 
+cd /path/to/directory/cylc/super_cam5cam6
 cylc stop super_cam5cam6/run1
 #######
 #######
