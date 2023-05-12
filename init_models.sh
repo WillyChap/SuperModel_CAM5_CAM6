@@ -20,20 +20,20 @@ cp ./Psuedo_Obs_Files/*.py /glade/work/wchapman/pseudoobs_V2
 #####settings####
 
 
-# ### CAM 5 Initialization.... ####################
-# ### CAM 5 Initialization.... ####################
-# ### CAM 5 Initialization.... ####################
-# ### CAM 5 Initialization.... ####################
-# ### CAM 5 Initialization.... ####################
+#### CAM 5 Initialization.... ####################
+#### CAM 5 Initialization.... ####################
+#### CAM 5 Initialization.... ####################
+#### CAM 5 Initialization.... ####################
+#### CAM 5 Initialization.... ####################
 
 /glade/work/francines/my_cesm_sandbox/cime/scripts/create_newcase  --case $CAM5DIR --run-unsupported --compset HIST_CAM50_CLM50%SP_CICE%PRES_DOCN%DOM_MOSART_SGLC_SWAV  --res f09_g16 --mach cheyenne --project $PROJ
 
 cd $CAM5DIR
 ./case.setup
 
-# change to CAM5 physics and to 32 levels.
+#change to CAM5 physics and to 32 levels.
 
-# ## sed -i -e '<entry id="CAM_CONFIG_OPTS" value="-phys cam5">' -e '<entry id="CAM_CONFIG_OPTS" value="-phys cam5 -nlev 32">' env_build.xml
+### sed -i -e '<entry id="CAM_CONFIG_OPTS" value="-phys cam5">' -e '<entry id="CAM_CONFIG_OPTS" value="-phys cam5 -nlev 32">' env_build.xml
 
 #xml change all of our shit
 ./xmlchange CAM_CONFIG_OPTS="-phys cam5 -nlev 32"
@@ -54,8 +54,8 @@ sed -i -e '$a ndens = 2, 2' user_nl_cam
 sed -i -e '$a fincl2 = \x27U:A\x27,\x27V:A\x27, \x27Q:A\x27, \x27T:A\x27, \x27PS:A\x27, \x27Nudge_U\x27, \x27Nudge_V\x27, \x27Nudge_T\x27, \x27Target_U\x27, \x27Target_V\x27, \x27Target_T\x27' user_nl_cam
 sed -i -e '$a &nudging_nl' user_nl_cam
 sed -i -e '$a \ Nudge_Model        =.true.' user_nl_cam
-sed -i -e '$a \ Nudge_Path         =\x27/glade/work/wchapman/pseudoobs_V2\x27' user_nl_cam
-sed -i -e '$a \ Nudge_File_Template=\x27test_pseudoobs_UVT.h1.%y-%m-%d-%s.nc\x27' user_nl_cam
+sed -i -e '$a \ Nudge_Path         =\x27/glade/work/wchapman/pseudoobs_V2/\x27' user_nl_cam
+sed -i -e '$a \ Nudge_File_Template=\x27/test_pseudoobs_UVT.h1.%y-%m-%d-%s.nc\x27' user_nl_cam
 sed -i -e '$a \ Nudge_Beg_Year =1979' user_nl_cam
 sed -i -e '$a \ Nudge_Beg_Month=1' user_nl_cam
 sed -i -e '$a \ Nudge_Beg_Day=1' user_nl_cam
@@ -95,12 +95,12 @@ cp ../Source_Mods_Files/*.F90 $CAM5DIR/SourceMods/src.cam/
 ## build 
 ./case.build
 
-# ### CAM 6 Initialization.... ####################
-# ### CAM 6 Initialization.... ####################
-# ### CAM 6 Initialization.... ####################
-# ### CAM 6 Initialization.... ####################
-# ### CAM 6 Initialization.... ####################
-# ### CAM 6 Initialization.... ####################
+#### CAM 6 Initialization.... ####################
+#### CAM 6 Initialization.... ####################
+#### CAM 6 Initialization.... ####################
+#### CAM 6 Initialization.... ####################
+#### CAM 6 Initialization.... ####################
+#### CAM 6 Initialization.... ####################
 
 /glade/work/francines/my_cesm_sandbox/cime/scripts/create_newcase  --case $CAM6DIR --run-unsupported --compset FHIST  --res f09_g16 --mach cheyenne --project $PROJ
 
@@ -125,8 +125,8 @@ sed -i -e '$a ndens = 2, 2' user_nl_cam
 sed -i -e '$a fincl2 = \x27U:A\x27,\x27V:A\x27, \x27Q:A\x27, \x27T:A\x27, \x27PS:A\x27, \x27Nudge_U\x27, \x27Nudge_V\x27, \x27Nudge_T\x27, \x27Target_U\x27, \x27Target_V\x27, \x27Target_T\x27' user_nl_cam
 sed -i -e '$a &nudging_nl' user_nl_cam
 sed -i -e '$a \ Nudge_Model        =.true.' user_nl_cam
-sed -i -e '$a \ Nudge_Path         =\x27/glade/work/wchapman/pseudoobs_V2\x27' user_nl_cam
-sed -i -e '$a \ Nudge_File_Template=\x27test_pseudoobs_UVT.h1.%y-%m-%d-%s.nc\x27' user_nl_cam
+sed -i -e '$a \ Nudge_Path         =\x27/glade/work/wchapman/pseudoobs_V2/\x27' user_nl_cam
+sed -i -e '$a \ Nudge_File_Template=\x27/test_pseudoobs_UVT.h1.%y-%m-%d-%s.nc\x27' user_nl_cam
 sed -i -e '$a \ Nudge_Beg_Year =1979' user_nl_cam
 sed -i -e '$a \ Nudge_Beg_Month=1' user_nl_cam
 sed -i -e '$a \ Nudge_Beg_Day=1' user_nl_cam
