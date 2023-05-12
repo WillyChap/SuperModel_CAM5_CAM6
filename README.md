@@ -8,6 +8,7 @@ First:
 ### Change all the path names in: 
 ./init_models 
 ./cylc/super_cam5cam6/
+./Peudo_obs_files/*
 
 -- you should be able to just search and replace "wchapman"
 
@@ -15,3 +16,8 @@ First:
 First run:
 
 bash init_model.sh
+
+
+then run the cylc process: 
+
+'HOW TO RUN CYLC' should give you some steps to do so... the syntax is weird. 
