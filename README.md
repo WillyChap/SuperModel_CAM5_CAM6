@@ -4,8 +4,8 @@
 This is a repo to run the CAM5/CAM6 super model with CYLC. 
 
 ### TO USE...First Change all the path names in: 
- - ./init_models
- - ./cylc/super_cam5cam6/
+ - ./init_models.sh
+ - ./cylc/super_cam5cam6/*
  - ./Peudo_obs_files/*
 
 -- you should be able to just search and replace "wchapman"
