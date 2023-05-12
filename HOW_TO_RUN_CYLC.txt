@@ -1,0 +1,26 @@
+# steps... 
+#######
+run these steps: 
+#######
+module load cylc/8
+cylc install 
+cylc play super_cam5cam6/run1
+#######
+#######
+#######
+#######
+#then you can go to the cylc directory to check logs... 
+In your home directory there will be: 
+~/cylc-run/super_cam5cam6/run1  
+#######
+#######
+#######
+#######
+#######
+#if you need to stop previous run... and you do. 
+cylc stop super_cam5cam6/run1
+#######
+#######
+#######
+#######
+
