@@ -3,6 +3,7 @@
 run these steps: 
 #######
 module load cylc/8
+cd path/to/directory/cylc/super_cam5cam6
 cylc install 
 cylc play super_cam5cam6/run1
 #######
