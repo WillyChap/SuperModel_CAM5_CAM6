@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import datetime
 import shutil
+import glob
 
 store_combined_path = '/glade/scratch/wchapman/store_super_cam5_cam6/'
 dir_search = '/glade/work/wchapman/pseudoobs_V2/*.nc'
