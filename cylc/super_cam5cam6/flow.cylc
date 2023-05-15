@@ -148,7 +148,7 @@
 			#Call Python script for dummy nudging file and archiving the old files
 			cd /glade/work/wchapman/pseudoobs_V2
 			/gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Add_fake_Time_File.py
-                    /gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Archive_Old_Files.py
+                        /gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Archive_Old_Files.py
 		"""
 	[[checker]]
 		script = """
