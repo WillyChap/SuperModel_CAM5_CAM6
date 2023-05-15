@@ -36,10 +36,16 @@
 			if [[ -f 'rpointer.atm' ]] 
 			then 
 			sed -i '1s/.*/Start again/' rpointer.atm
+            else
+            touch rpointer.atm
+            sed -i '1s/.*/Start again/' rpointer.atm
 			fi
 			if [[ -f 'find_time_cam6.txt' ]]
 			then
 			sed -i '1s/.*/Start again/' find_time_cam6.txt
+            else
+            touch find_time_cam6.txt
+            sed -i '1s/.*/Start again/' find_time_cam6.txt
 			fi
 			
 		
@@ -56,10 +62,16 @@
 			if [[ -f 'rpointer.atm' ]]
 			then
 			sed -i '1s/.*/Start again/' rpointer.atm
+            else
+            touch rpointer.atm
+            sed -i '1s/.*/Start again/' rpointer.atm
 			fi
 			if [[ -f 'find_time_cam5.txt' ]]
 			then
 			sed -i '1s/.*/Start again/' find_time_cam5.txt
+            else
+            touch find_time_cam5.txt
+            sed -i '1s/.*/Start again/' find_time_cam5.txt
 			fi
 
 			
@@ -133,10 +145,10 @@
 		"""
 	[[dummy]]
 		script = """
-			#Call Python script for dummy nudging file
+			#Call Python script for dummy nudging file and archiving the old files
 			cd /glade/work/wchapman/pseudoobs_V2
 			/gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Add_fake_Time_File.py
-		   		
+            /gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Archive_Old_Files.py
 		"""
 	[[checker]]
 		script = """
