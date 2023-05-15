@@ -1,7 +1,7 @@
 # SuperModel_CAM5_CAM6
 
 ### note: This really only works on Cheyenne / NCAR machines at the moment. ... 
-This is a repo to run the CAM5/CAM6 super model with [CYLC]([https://link-url-here.org](https://cylc.github.io/)).
+This is a repo to run a CAM5/CAM6 super model with [CYLC](https://cylc.github.io/). Leveraging a custom made Relaxation tool box. 
 
 ### TO USE...First Change all the path names in: 
  - ./init_models.sh
