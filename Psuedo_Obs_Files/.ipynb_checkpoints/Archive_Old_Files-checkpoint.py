@@ -12,7 +12,12 @@ list_of_files = sorted(glob.glob(dir_search)) # get the latest file in the pseud
 latest_file = max(list_of_files, key=os.path.getctime)
 
 #time stamp latest files
-ts_latest= pd.to_datetime(latest_file[-19:-9]+' '+str(datetime.timedelta(seconds=float(latest_file[-8:-2]))))
+try:
+    ts_latest= pd.to_datetime(latest_file[-19:-9]+' '+str(datetime.timedelta(seconds=float(latest_file[-8:-2]))))
+except ValueError:
+    print('file name is: ',latest_file)
+    print('NC file not in the correct format')
+    raise SystemExit("Woops.")
 
 mv_dict={}
 for fn in sorted(glob.glob(dir_search)):
