@@ -19,7 +19,6 @@ for fn in sorted(glob.glob(dir_search)):
     try: 
         time_file = pd.to_datetime(fn[-19:-9]+' '+str(datetime.timedelta(seconds=float(fn[-8:-2]))))
         mv_dict[time_file]=fn
-        print(fn)
         #move the file if they are four days older than the current time
         if time_file<(ts_latest - datetime.timedelta(days=3)):
             #save the combined states, discard the h1 files (they are repeated in the scract)
