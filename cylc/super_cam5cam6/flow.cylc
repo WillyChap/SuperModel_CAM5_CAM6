@@ -7,17 +7,18 @@
 	#Change the start and end cycle point here
 	cycling mode = integer
 	initial cycle point = 1
-	final cycle point = 5
+	final cycle point = 120
 	[[dependencies]]
 		[[[R1]]]
 			graph = """
-			init => run_family => checker => find_time => ave_data => dummy => continue_run_cam5 => continue_run_cam6
-			#continue_run_cam6[-P1] => run_family
-			""" # dispose_common_data'
+			init => checker_1 => find_time => ave_data => dummy => continue_run_cam5 => continue_run_cam6 => run_family
+			""" 
 		[[[+P1/P1]]]
 			graph = """
-			run_family => checker => find_time => ave_data => dummy
-			dummy[-P1] => run_family
+			checker? => find_time => ave_data => dummy => nextrun
+			checker:fail? => resubmit
+			resubmit | nextrun => run_family
+			run_family[-P1] => checker?
 			"""
 [runtime]
 	[[init]]
@@ -36,18 +37,18 @@
 			if [[ -f 'rpointer.atm' ]] 
 			then 
 			sed -i '1s/.*/Start again/' rpointer.atm
-            else
-            touch rpointer.atm
-            sed -i '1s/.*/Start again/' rpointer.atm
+            		else
+            		touch rpointer.atm
+            		sed -i '1s/.*/Start again/' rpointer.atm
 			fi
 			if [[ -f 'find_time_cam6.txt' ]]
 			then
 			sed -i '1s/.*/Start again/' find_time_cam6.txt
-            else
-            touch find_time_cam6.txt
-            sed -i '1s/.*/Start again/' find_time_cam6.txt
+            		else
+            		touch find_time_cam6.txt
+             		sed -i '1s/.*/Start again/' find_time_cam6.txt
 			fi
-			
+					
 		
 			#Prepare CAM5 for a new cylc workflow	
 			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM5_32levs
@@ -62,18 +63,26 @@
 			if [[ -f 'rpointer.atm' ]]
 			then
 			sed -i '1s/.*/Start again/' rpointer.atm
-            else
-            touch rpointer.atm
-            sed -i '1s/.*/Start again/' rpointer.atm
+			else
+            		touch rpointer.atm
+            		sed -i '1s/.*/Start again/' rpointer.atm
 			fi
 			if [[ -f 'find_time_cam5.txt' ]]
 			then
 			sed -i '1s/.*/Start again/' find_time_cam5.txt
-            else
-            touch find_time_cam5.txt
-            sed -i '1s/.*/Start again/' find_time_cam5.txt
+            		else
+            		touch find_time_cam5.txt
+            		sed -i '1s/.*/Start again/' find_time_cam5.txt
 			fi
-
+            
+			#Start CAM6
+			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM6_f09_g16
+			./case.submit
+			
+			#Start CAM5
+			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM5_32levs
+			./case.submit	
+            
 			
 		"""
 	[[find_time]]
@@ -90,7 +99,7 @@
 			echo "$cam6_time"
 
 			time=`echo "${cam6_time}" | grep -o -P '(?<=r.).*(?=.nc)'`
-			cp "CAM6_f09_g16.cam.h1.$time.nc" /glade/work/wchapman/pseudoobs_V2	
+			cp "cam6_FHIST.cam.h1.$time.nc" /glade/work/wchapman/pseudoobs_V2	
 
 			#Find current time CAM5 and copy file to pseudoobs
 			cd /glade/scratch/wchapman/CAM5_32levs/run
@@ -98,7 +107,7 @@
 			cp rpointer.atm find_time_cam5.txt
 			cam5_time=$(head -n 1 'find_time_cam5.txt')
 			echo "$cam5_time"	
-			cp "CAM5_32levs.cam.h1.$time.nc" /glade/work/wchapman/pseudoobs_V2
+			cp "cam6cam5phys_FHIST_nlev32_2.cam.h1.$time.nc" /glade/work/wchapman/pseudoobs_V2
 		"""
 	[[ave_data]]
 		script = """
@@ -106,32 +115,28 @@
 			cd /glade/work/wchapman/pseudoobs_V2
 			./average_restart_supercam5cam6.sh
 		"""
+	[[resubmit]]
+		script = """
+			#Rewrite rpointer files
+			/gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Rewrite_Rpointer.py            
+		"""  
+	[[nextrun]]
+		script = """
+			echo "Going to the next 6hr"
+		"""         
 	[[continue_run_cam6]]
 		script = """
 			#Change CONTINUE_RUN to TRUE, in order to continue the run
-			#(actually only necessary 1st restart)
-			
 			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM6_f09_g16
-			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM6_f09_g16	
-			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM6_f09_g16	
 			./xmlchange CONTINUE_RUN=TRUE
-			./xmlchange CONTINUE_RUN=TRUE
-			./xmlchange CONTINUE_RUN=TRUE
-			./xmlchange CONTINUE_RUN=TRUE
-			sleep 10
+
 		"""
 	[[continue_run_cam5]]
 		script = """					
-			
+			#Change CONTINUE_RUN to TRUE, in order to continue the run
 			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM5_32levs
-			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM5_32levs 		
-			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM5_32levs
+			./xmlchange CONTINUE_RUN=TRUE
 
-			./xmlchange CONTINUE_RUN=TRUE
-			./xmlchange CONTINUE_RUN=TRUE
-			./xmlchange CONTINUE_RUN=TRUE
-			./xmlchange CONTINUE_RUN=TRUE
-			sleep 10
 		"""
 	[[run_family]]
 		script = """
@@ -142,30 +147,46 @@
 			#Start or restart CAM5
 			cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM5_32levs
 			./case.submit	
-		"""
+		"""        
+        
 	[[dummy]]
 		script = """
-			#Call Python script for dummy nudging file and archiving the old files
+			#Call Python script for dummy nudging file
 			cd /glade/work/wchapman/pseudoobs_V2
 			/gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Add_fake_Time_File.py
-                        /gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Archive_Old_Files.py
+		        /gpfs/u/apps/dav/opt/python/3.6.8/gnu/7.3.0/pkg-library/20190723/bin/python Archive_Old_Files.py 	 		
 		"""
+	[[checker_1]]
+		script = """
+			#Check if both models have their output ready for the pseudo obs.
+			cd /glade/scratch/wchapman/CAM6_f09_g16/run
+			old_time_cam6=$(head -n 1 '/glade/scratch/wchapman/CAM6_f09_g16/run/find_time_cam6.txt')
+			new_time_cam6=$(head -n 1 '/glade/scratch/wchapman/CAM6_f09_g16/run/rpointer.atm')	
+		
+
+			cd /glade/scratch/wchapman/CAM5_32levs/run
+			old_time_cam5=$(head -n 1 '/glade/scratch/wchapman/CAM5_32levs/run/find_time_cam5.txt')
+			new_time_cam5=$(head -n 1 '/glade/scratch/wchapman/CAM5_32levs/run/rpointer.atm')
+			
+			[[ ($old_time_cam6 != $new_time_cam6) && ($old_time_cam5 != $new_time_cam5) ]]
+
+		"""
+		execution retry delays = 50 * PT1M
+	
 	[[checker]]
 		script = """
 			#Check if both models have their output ready for the pseudo obs.
 			cd /glade/scratch/wchapman/CAM6_f09_g16/run
 			old_time_cam6=$(head -n 1 '/glade/scratch/wchapman/CAM6_f09_g16/run/find_time_cam6.txt')
-			new_time_cam6=$(head -n 1 '/glade/scratch/wchapman/CAM6_f09_g16/run/rpointer.atm')
-			#cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM6_f09_g16
-			#./xmlchange CONTINUE_RUN=TRUE
+			new_time_cam6=$(head -n 1 '/glade/scratch/wchapman/CAM6_f09_g16/run/rpointer.atm')	
+		
 
 			cd /glade/scratch/wchapman/CAM5_32levs/run
 			old_time_cam5=$(head -n 1 '/glade/scratch/wchapman/CAM5_32levs/run/find_time_cam5.txt')
 			new_time_cam5=$(head -n 1 '/glade/scratch/wchapman/CAM5_32levs/run/rpointer.atm')
-			#cd /glade/u/home/wchapman/CAM5_CAM6_SuperModel/CAM5_32levs
-			#./xmlchange CONTINUE_RUN=TRUE
-
+			
 			[[ ($old_time_cam6 != $new_time_cam6) && ($old_time_cam5 != $new_time_cam5) ]]
+
 		"""
 		execution retry delays = 50 * PT1M
 	
